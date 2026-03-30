@@ -1,0 +1,66 @@
+<div class="glass-panel w-full max-w-md rounded-xl p-8 shadow-2xl transition-all duration-300 mx-auto mt-10">
+    <div class="text-center mb-6">
+        <h1 class="text-3xl font-bold text-primary">Admin Login</h1>
+        <p class="text-sm font-semibold text-highlight mt-2">Log System Authentication</p>
+    </div>
+
+    <form id="loginForm" class="flex flex-col gap-4">
+        <div class="flex flex-col">
+            <label class="text-sm font-bold mb-1 text-text">Username</label>
+            <input type="text" id="username" placeholder="admin" required
+                   class="px-4 py-2 border border-disable rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+        </div>
+
+        <div class="flex flex-col">
+            <label class="text-sm font-bold mb-1 text-text">Password</label>
+            <input type="password" id="password" placeholder="••••••" required
+                   class="px-4 py-2 border border-disable rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+        </div>
+
+        <p id="loginFeedback" class="text-sm font-bold text-center min-h-[20px] text-danger"></p>
+        
+        <button type="submit" id="loginBtn" class="w-full bg-primary hover:bg-buttonPressed text-light py-3 rounded-md font-bold transition-all active:scale-[0.98]">
+            Access System
+        </button>
+    </form>
+</div>
+
+<script>
+    // Pure Separation: If already logged in, skip the login screen automatically
+    if (sessionStorage.getItem('van-auth-token')) {
+        window.location.href = '/admin';
+    }
+
+    const loginForm = document.getElementById('loginForm');
+    const loginFeedback = document.getElementById('loginFeedback');
+
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        loginFeedback.innerText = '';
+        const u = document.getElementById('username').value;
+        const p = document.getElementById('password').value;
+        
+        const token = 'Basic ' + btoa(u + ':' + p);
+        
+        try {
+            const btn = document.getElementById('loginBtn');
+            btn.innerText = 'Verifying...';
+            btn.disabled = true;
+
+            // Test credentials against API endpoint
+            const res = await fetch('/admin/config', { headers: { 'Authorization': token }});
+            if (!res.ok) throw new Error('Invalid credentials');
+            
+            // Valid token! Save it and navigate to Dashboard
+            sessionStorage.setItem('van-auth-token', token);
+            window.location.href = '/admin';
+            
+        } catch (err) {
+            loginFeedback.innerText = err.message;
+        } finally {
+            const btn = document.getElementById('loginBtn');
+            btn.innerText = 'Access System';
+            btn.disabled = false;
+        }
+    });
+</script>

@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment files (never commit real credentials)
+.env
+
+# Logs directory (generated at runtime)
+logs/
+
+# Test coverage
+coverage/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# NestJS cache
+.nest/
+
+# Database files
+*.sqlite
+*.sqlite3
+database.sqlite
+database.sqlite-journal

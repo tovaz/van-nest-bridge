@@ -1,0 +1,20 @@
+// _variables.scss
+// Derived from original example-scss
+
+:root {
+  --primary: #880063;
+  --primary-contrast: #fff;
+  --high-light: #2b537c;
+  --high-light-contrast: #ffffff;
+  --background: #d0d0dc;
+  --background-rgb: 208, 208, 220;
+  --text-color: #1e0117;
+  --light-color: #fff;
+  --button-pressed: #CA4D6E;
+  --disable-color: #b3b3c7;
+  
+  --success: #006322;
+  --danger: #c9454b;
+}
+
+$font-stack: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;

@@ -1,0 +1,153 @@
+//_ Theme variables
+@import 'app-color-variables.scss';
+@import 'rodalies-color-variables.scss';
+
+
+@import 'app-font-style.scss';
+@import 'app-variables.scss';
+@import 'app-class.scss';
+@import 'hg-keyboard.scss';
+@import 'simple-keyboard/build/css/index.css';
+@import 'angular-components/styles.scss';
+
+/* You can add global styles to this file, and also import other style files */
+* {
+  font-family: Rubik;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: var(--app-font-family);
+  font-weight: 500;
+  font-size: 26px;
+  line-height: normal;
+  background: var(--background) !important;
+  color: var(--text-color);
+
+  .main-content-wrapper {
+    height: 100%;
+    width: 100%;
+  }
+}
+
+html {
+  background: var(--background); // COMENT FOR LAYOUT
+  //   background: white; // UNCOMMENT FOR LAYOUT
+  // }
+
+  // body {
+  //   max-width: var(--app-page-max-width); // UNCOMMENT FOR LAYOUT
+  //   max-height: var(--app-layout-max-height); // UNCOMMENT FOR LAYOUT
+  background: var(--background);
+  margin: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.ngxImageZoomContainer {
+  /*width: 100% !important;
+  height: 100% !important;*/
+}
+
+.ngxImageZoomContainer {
+  width: 100% !important;
+  height: 100% !important;
+
+  .ngxImageZoomFull {
+    display: none !important;
+  }
+}
+
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.fullscreen-dialog {
+  animation: none;
+  -webkit-animation: none;
+  max-width: 100% !important;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+
+}
+
+::ng-deep .mat-calendar {
+  width: unset !important;
+  height: unset !important;
+}
+
+.input-station-arrows {
+  width: 25px;
+  height: 25px;
+  z-index: 1;
+  position: absolute;
+  left: calc((12.5% - 0.875px) * 3 - 13px);
+  top: 42px;
+  fill: var(--text-color);
+}
+
+.bordered-button {
+  height: calc(100% - 5px);
+  width: 100%;
+  margin-bottom: 5px;
+  border-radius: var(--app-item-border-radius);
+  padding: var(--app-item-padding);
+  font-size: 20px;
+  text-align: left;
+  font-weight: 500;
+
+  background: var(--app-gradient-border) !important;
+  border: 5px solid transparent !important;
+
+  ::ng-deep {
+    .mdc-button__label {
+      width: 100% !important;
+    }
+  }
+
+  p {
+    margin: 0 0 5px 0;
+  }
+
+  h2 {
+    font-size: 40px;
+    color: var(--primary);
+    margin: 0;
+  }
+}
+
+
+.app-tooltip {
+  border-radius: 24px;
+  min-width: 300px;
+
+  .mdc-tooltip__surface {
+    width: 100%;
+    max-width: 370px;
+
+    background: white;
+    color: var(--text-color);
+    padding: 16px;
+    border-radius: 20px;
+    overflow: hidden;
+    overflow-y: auto;
+
+    touch-action: auto !important;
+  }
+}
+
+// para botones secundarios, pero no deshabilitados.  
+.footer-buttons .btn-secondary {
+  background: var(--secondary) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}

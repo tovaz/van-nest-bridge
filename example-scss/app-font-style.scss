@@ -1,0 +1,105 @@
+//_ Normal
+@font-face {
+    font-family: 'Rubik';
+    src: url('./../fonts/rubik/Rubik-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Rubik-medium';
+    src: url('./../fonts/rubik/Rubik-Medium.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Rubik-bold';
+    src: url('./../fonts/rubik/Rubik-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Rubik-semi-bold';
+    src: url('./../fonts/rubik/Rubik-SemiBold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Rubik-light';
+    src: url('./../fonts/rubik/Rubik-Light.ttf') format('truetype');
+    font-weight: lighter;
+    font-style: normal;
+}
+
+//_ Italic
+@font-face {
+    font-family: 'Rubik-italic';
+    src: url('./../fonts/rubik/Rubik-Italic.ttf') format('truetype');
+    font-weight: 500;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Rubik-bold-italic';
+    src: url('./../fonts/rubik/Rubik-BoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Rubik-light-italic';
+    src: url('./../fonts/rubik/Rubik-LightItalic.ttf') format('truetype');
+    font-weight: lighter;
+    font-style: italic;
+}
+
+* {
+
+    .rubik-regular {
+        font-family: 'Rubik' !important;
+
+        * {
+            font-family: 'Rubik' !important;
+        }
+    }
+
+    .rubik-medium {
+        font-family: 'Rubik-medium' !important;
+
+        * {
+            font-family: 'Rubik-medium' !important;
+        }
+    }
+
+    .rubik-bold {
+        font-family: 'Rubik-bold' !important;
+
+        * {
+            font-family: 'Rubik-bold' !important;
+        }
+    }
+
+    .rubik-semibold {
+        font-family: 'Rubik-semi-bold' !important;
+
+        * {
+            font-family: 'Rubik-semi-bold' !important;
+        }
+    }
+
+    .rubik-light {
+        font-family: 'Rubik-light' !important;
+
+        * {
+            font-family: 'Rubik-light' !important;
+        }
+    }
+
+    --app-font-family: "Rubik",
+    "Roboto",
+    "sans-serif";
+    font-family: var(--app-font-family);
+}

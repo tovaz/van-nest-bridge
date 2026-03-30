@@ -1,0 +1,146 @@
+<div class="glass-panel w-full max-w-3xl rounded-xl p-8 shadow-2xl transition-all duration-300 mx-auto mt-10">
+    <div class="flex justify-between items-start mb-6 border-b border-disable/30 pb-4">
+        <div>
+            <h1 class="text-3xl font-bold text-primary">System Config</h1>
+            <p class="text-sm font-semibold text-highlight mt-1">Local persistent SQLite config</p>
+        </div>
+        <button id="logoutBtn" class="text-sm px-3 py-1 bg-disable hover:bg-danger text-light rounded-md transition-colors cursor-pointer">
+            Logout
+        </button>
+    </div>
+
+    <form id="configForm" class="flex flex-col gap-5">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            
+            <div class="flex flex-col">
+                <label class="text-sm font-bold mb-1 text-text">Log Directory</label>
+                <input type="text" id="logDir" placeholder="./logs" value="{{config.logDir}}" required
+                       class="px-4 py-2.5 bg-light border border-disable rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition-all">
+            </div>
+            
+            <div class="flex flex-col">
+                <label class="text-sm font-bold mb-1 text-text">File Pattern</label>
+                <input type="text" id="logFilePattern" placeholder="app-%DATE%.log" value="{{config.logFilePattern}}" required
+                       class="px-4 py-2.5 bg-light border border-disable rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition-all">
+            </div>
+
+            <div class="flex flex-col">
+                <label class="text-sm font-bold mb-1 text-text">Date Pattern</label>
+                <input type="text" id="logDatePattern" placeholder="YYYY-MM-DD" value="{{config.logDatePattern}}" required
+                       class="px-4 py-2.5 bg-light border border-disable rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition-all">
+            </div>
+
+            <div class="flex flex-col">
+                <label class="text-sm font-bold mb-1 text-text">Log Level (Current: {{config.logLevel}})</label>
+                <select id="logLevel" required
+                        class="px-4 py-2.5 bg-light border border-disable rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition-all">
+                    <option value="error">error</option>
+                    <option value="warn">warn</option>
+                    <option value="info">info</option>
+                    <option value="http">http</option>
+                    <option value="verbose">verbose</option>
+                    <option value="debug">debug</option>
+                </select>
+            </div>
+
+            <div class="flex flex-col">
+                <label class="text-sm font-bold mb-1 text-text">Max Size</label>
+                <input type="text" id="logMaxSize" placeholder="20m" value="{{config.logMaxSize}}" pattern="\d+[kKmMbB]" title="e.g. 20m, 50k, 1g" required
+                       class="px-4 py-2.5 bg-light border border-disable rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition-all">
+            </div>
+
+            <div class="flex flex-col">
+                <label class="text-sm font-bold mb-1 text-text">Retention</label>
+                <input type="text" id="logMaxFiles" placeholder="30d" value="{{config.logMaxFiles}}" required
+                       class="px-4 py-2.5 bg-light border border-disable rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition-all">
+            </div>
+        </div>
+
+        <p id="configFeedback" class="text-sm font-bold text-center min-h-[20px] mt-2"></p>
+        
+        <button type="submit" id="saveBtn" class="w-full bg-primary hover:bg-buttonPressed text-light py-3 rounded-md font-bold transition-all active:scale-[0.98] mt-2 shadow-md">
+            Save & Hot-Swap Logger
+        </button>
+    </form>
+</div>
+
+<!-- Frontend SPA Logic -->
+<script>
+    const authHeader = sessionStorage.getItem('van-auth-token');
+
+    // Multi-Page App Separation: Redirect back to login if they bypassed the system
+    if (!authHeader) {
+        window.location.href = '/admin/login';
+    }
+
+    const serverConfig = {{{configJson}}};
+    const logLevelSelect = document.getElementById('logLevel');
+    const configForm = document.getElementById('configForm');
+    const configFeedback = document.getElementById('configFeedback');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    if (serverConfig && serverConfig.logLevel) {
+        logLevelSelect.value = serverConfig.logLevel;
+    }
+
+    logoutBtn.addEventListener('click', () => {
+        sessionStorage.removeItem('van-auth-token');
+        window.location.href = '/admin/login';
+    });
+
+    configForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        configFeedback.innerText = '';
+        const saveBtn = document.getElementById('saveBtn');
+        saveBtn.disabled = true;
+        saveBtn.innerText = 'Applying Config...';
+
+        const payload = {
+            logDir: document.getElementById('logDir').value,
+            logFilePattern: document.getElementById('logFilePattern').value,
+            logDatePattern: document.getElementById('logDatePattern').value,
+            logLevel: document.getElementById('logLevel').value,
+            logMaxSize: document.getElementById('logMaxSize').value,
+            logMaxFiles: document.getElementById('logMaxFiles').value,
+        };
+
+        try {
+            const res = await fetch('/admin/config', {
+                method: 'POST',
+                headers: { 
+                    'Authorization': authHeader,
+                    'Content-Type': 'application/json' 
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if(!res.ok) {
+                if (res.status === 401) {
+                    sessionStorage.removeItem('van-auth-token');
+                    window.location.href = '/admin/login';
+                    return;
+                }
+                const errData = await res.json();
+                throw new Error(errData.message || 'Error updating config');
+            }
+
+            configFeedback.className = 'text-sm font-bold text-center min-h-[20px] mt-2 text-success';
+            configFeedback.innerText = 'Configuration saved securely and logger hot-swapped!';
+        } catch (err) {
+            configFeedback.className = 'text-sm font-bold text-center min-h-[20px] mt-2 text-danger';
+            configFeedback.innerText = Array.isArray(err.message) ? err.message.join(', ') : err.message;
+        } finally {
+            saveBtn.disabled = false;
+            saveBtn.innerText = 'Save & Hot-Swap Logger';
+        }
+    });
+
+    // Final security check async against server
+    fetch('/admin/config', { headers: { 'Authorization': authHeader }})
+      .then(r => {
+        if (!r.ok) {
+           sessionStorage.removeItem('van-auth-token');
+           window.location.href = '/admin/login';
+        }
+      });
+</script>
