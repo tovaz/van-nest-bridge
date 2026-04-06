@@ -14,6 +14,14 @@ import { join } from 'path';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+  // === CORS ===
+  app.enableCors({
+    origin: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['*'],
+    credentials: true,
+  });
+
   // === MVC Handlebars Setup ===
   app.setBaseViewsDir(join(process.cwd(), 'src', 'views'));
   app.setViewEngine('hbs');

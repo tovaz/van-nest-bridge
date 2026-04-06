@@ -41,7 +41,19 @@ export function createWinstonLogger(
   const jsonFormat = winston.format.combine(
     timestampFormat,
     winston.format.errors({ stack: true }),
-    winston.format.json(),
+    winston.format.printf(({ timestamp, level, context, message, ...meta }) => {
+      // Compact header with core info
+      const header = `{\n timestamp: '${timestamp}', context: '${context || ''}', level: '${level}', `;
+      // Body with real line breaks for readability
+      const body = `\n message: '${message}' \n`;
+      // Optional metadata if present
+      const extras =
+        Object.keys(meta).length > 0
+          ? `\n\nextras: ${JSON.stringify(meta, null, 2)}`
+          : '';
+
+      return `${header}${body}${extras}}\n\n`; // Double newline for clear block separation
+    }),
   );
 
   const consoleFormat = winston.format.combine(
