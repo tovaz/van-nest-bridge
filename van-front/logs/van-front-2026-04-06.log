@@ -1,0 +1,55 @@
+{
+ timestamp: '2026-04-06 23:31:20', context: 'console', level: 'info', 
+ message: 'HOST TO REQUEST https://van.desa.sir.renfe.es/van/RestInterface' 
+}
+
+
+{
+ timestamp: '2026-04-06 23:31:20', context: 'console', level: 'info', 
+ message: 'HOST TO REQUEST https://van.desa.sir.renfe.es/van/RestInterface' 
+}
+
+
+{
+ timestamp: '2026-04-06 23:31:20', context: 'console', level: 'info', 
+ message: '[StartupLock] Esperando primer resultado de arranque global...' 
+}
+
+
+{
+ timestamp: '2026-04-06 23:31:21', context: 'console', level: 'error', 
+ message: '[TerminalService] WebSocket CLOSED durante el arranque. Marcamos appGlobalInitState = false' 
+}
+
+
+{
+ timestamp: '2026-04-06 23:31:22', context: 'console', level: 'info', 
+ message: 'terminalData: undefined' 
+}
+
+
+{
+ timestamp: '2026-04-06 23:31:23', context: 'console', level: 'info', 
+ message: '[UI-activity] No se programa timer venta: no OK o no ready {
+  "ready": false
+}' 
+}
+
+
+{
+ timestamp: '2026-04-06 23:31:26', context: 'console', level: 'warn', 
+ message: 'Socket message timeout {
+  "message_fn": "STATE_MANAGER",
+  "topic": "/app/function"
+}' 
+}
+
+
+{
+ timestamp: '2026-04-06 23:31:48', context: 'console', level: 'info', 
+ message: '[UI-activity] No se programa timer venta: no OK o no ready {
+  "ready": false
+}' 
+}
+
+
