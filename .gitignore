@@ -8,7 +8,7 @@ dist/
 .env
 
 # Logs directory (generated at runtime)
-logs/
+/logs/
 
 # Test coverage
 coverage/
