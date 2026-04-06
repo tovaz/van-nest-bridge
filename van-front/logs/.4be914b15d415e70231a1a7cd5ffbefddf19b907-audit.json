@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 30
+    },
+    "auditLog": "C:\\van-nest-bridge\\van-nest-bridge\\van-front\\logs\\.4be914b15d415e70231a1a7cd5ffbefddf19b907-audit.json",
+    "files": [
+        {
+            "date": 1775510187619,
+            "name": "C:\\van-nest-bridge\\van-nest-bridge\\van-front\\logs\\van-front-2026-04-06.log",
+            "hash": "5122634631f1840af03f03949624da7fcb3dc3e98761d7efd51b97d023c81084"
+        }
+    ],
+    "hashType": "sha256"
+}

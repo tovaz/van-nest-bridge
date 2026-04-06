@@ -10,7 +10,7 @@ import * as Joi from 'joi';
 export const envValidationSchema = Joi.object({
   // Server binding
   PORT: Joi.number().integer().min(1).max(65535).default(3000),
-  HOST: Joi.string().hostname().default('127.0.0.1'),
+  HOST: Joi.string().default('0.0.0.0'),
 
   // Log file configuration
   LOG_DIR: Joi.string().default('./logs'),

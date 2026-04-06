@@ -27,6 +27,7 @@ export class LocalOnlyGuard implements CanActivate {
     '127.0.0.1',
     '::1',
     '::ffff:127.0.0.1',
+    '192.168.42.1'
   ]);
 
   canActivate(context: ExecutionContext): boolean {
