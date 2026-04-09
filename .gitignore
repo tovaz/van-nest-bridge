@@ -32,3 +32,4 @@ Thumbs.db
 database.sqlite
 database.sqlite-journal
 manual-instalacion-van-nest-bridge.pdf
+*.exe

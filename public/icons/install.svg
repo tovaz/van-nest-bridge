@@ -1,0 +1,13 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradDiscoPaleta" x1="256" y1="50" x2="256" y2="462" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#880063"/> <stop offset="1" stop-color="#CA4D6E"/> </linearGradient>
+  </defs>
+
+  <g opacity="0.8" transform="translate(60, 50) rotate(-5)">
+    <rect x="0" y="0" width="340" height="400" rx="15" fill="#d0d0dc" stroke="#b3b3c7" stroke-width="8"/> <line x1="50" y1="80" x2="290" y2="80" stroke="#1e0117" stroke-width="12" stroke-linecap="round"/> <line x1="50" y1="140" x2="290" y2="140" stroke="#1e0117" stroke-width="12" stroke-linecap="round"/> <line x1="50" y1="200" x2="200" y2="200" stroke="#1e0117" stroke-width="12" stroke-linecap="round"/> </g>
+
+  <circle cx="256" cy="256" r="200" fill="url(#gradDiscoPaleta)" stroke="#fff" stroke-width="12" /> <circle cx="256" cy="256" r="35" fill="#ffffff" stroke="#2b537c" stroke-width="8"/> <g transform="translate(176, 146) scale(0.65)">
+    <path d="M125 0V280M125 280L0 155M125 280L250 155" stroke="#fff" stroke-width="35" stroke-linecap="round" stroke-linejoin="round"/> </g>
+
+  <circle cx="420" cy="420" r="55" fill="#006322" stroke="#fff" stroke-width="8" /> <path d="M390 420L415 445L455 395" stroke="#fff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/> </svg>
