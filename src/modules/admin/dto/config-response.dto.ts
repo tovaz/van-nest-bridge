@@ -17,4 +17,6 @@ export class ConfigResponseDto {
   logLevel: string;
   logMaxSize: string;
   logMaxFiles: string;
+  logZippedArchive: boolean;
+  logArchiveDirPattern: string;
 }

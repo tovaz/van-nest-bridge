@@ -56,12 +56,14 @@ export class ConfigStoreService {
 
     const newConfig = this.configRepo.create({
       id: 1,
-      logDir: this.envConfig.get<string>('LOG_DIR', './logs'),
-      logFilePattern: this.envConfig.get<string>('LOG_FILE_PATTERN', 'app-%DATE%.log'),
-      logDatePattern: this.envConfig.get<string>('LOG_DATE_PATTERN', 'YYYY-MM-DD'),
+      logDir: this.envConfig.get<string>('LOG_DIR', 'C:\\VAN_RUN\\logsangular'),
+      logFilePattern: this.envConfig.get<string>('LOG_FILE_PATTERN', 'van-front-%DATE%.log'),
+      logDatePattern: this.envConfig.get<string>('LOG_DATE_PATTERN', 'MM-DD-YYYY'),
       logLevel: this.envConfig.get<string>('LOG_LEVEL', 'info'),
-      logMaxSize: this.envConfig.get<string>('LOG_MAX_SIZE', '20m'),
+      logMaxSize: this.envConfig.get<string>('LOG_MAX_SIZE', '10m'),
       logMaxFiles: this.envConfig.get<string>('LOG_MAX_FILES', '30d'),
+      logZippedArchive: this.envConfig.get<boolean>('LOG_ZIPPED_ARCHIVE', true),
+      logArchiveDirPattern: this.envConfig.get<string>('LOG_ARCHIVE_DIR_PATTERN', 'YYYY-MM'),
     });
 
     try {

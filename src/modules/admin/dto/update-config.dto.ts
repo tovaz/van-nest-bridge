@@ -1,4 +1,5 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsString, IsNotEmpty, IsBoolean, IsOptional } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 /**
  * UpdateConfigDto
@@ -31,4 +32,12 @@ export class UpdateConfigDto {
   @IsString()
   @IsNotEmpty({ message: 'Max Files retention is required' })
   logMaxFiles: string;
+
+  @Transform(({ value }) => value === true || value === 'true')
+  @IsBoolean()
+  logZippedArchive: boolean;
+
+  @IsString()
+  @IsOptional()
+  logArchiveDirPattern: string;
 }

@@ -17,6 +17,9 @@ export class AppLoggerService implements OnModuleInit, OnModuleDestroy {
     transports: [new winston.transports.Console()],
   });
 
+  // Tracks the last applied config to detect which fields actually changed
+  private currentConfig: WinstonConfigPayload | null = null;
+
   constructor(private readonly configStore: ConfigStoreService) {}
 
   async onModuleInit() {
@@ -25,17 +28,41 @@ export class AppLoggerService implements OnModuleInit, OnModuleDestroy {
   }
 
   /**
-   * Gracefully swaps the current Winston logger with a new one based on new config.
-   * Prevents losing pending logs by closing the old one after binding the new one.
+   * Gracefully reloads the logger config.
+   *
+   * If only non-structural fields changed (logLevel, logMaxFiles), the existing
+   * file transport is kept alive so the in-day rotation counter is preserved.
+   * The underlying file-stream-rotator counter is in-memory only (known upstream
+   * bug: github.com/rogerc/file-stream-rotator/issues/101), so recreating the
+   * transport always resets it to 1.
+   *
+   * A full transport recreation is triggered only when file-structural config
+   * changes (dir, filename pattern, date pattern, size limit, compression, archive dir).
    */
   reloadConfig(newConfig: WinstonConfigPayload): void {
-    const oldLogger = this.logger;
-    this.logger = createWinstonLogger(newConfig);
+    const isStructuralChange = !this.currentConfig || (
+      newConfig.logDir !== this.currentConfig.logDir ||
+      newConfig.logFilePattern !== this.currentConfig.logFilePattern ||
+      newConfig.logDatePattern !== this.currentConfig.logDatePattern ||
+      newConfig.logMaxSize !== this.currentConfig.logMaxSize ||
+      newConfig.logZippedArchive !== this.currentConfig.logZippedArchive ||
+      newConfig.logArchiveDirPattern !== this.currentConfig.logArchiveDirPattern
+    );
 
-    // If it's not the initial fallback shell, we safely flush and close the old transports
-    if (oldLogger.transports.length > 1) {
-      oldLogger.close();
-      console.log('[AppLoggerService] Dynamically reloaded logging configuration.');
+    this.currentConfig = newConfig;
+
+    if (isStructuralChange) {
+      const oldLogger = this.logger;
+      this.logger = createWinstonLogger(newConfig);
+      if (oldLogger.transports.length > 1) {
+        oldLogger.close();
+      }
+      console.log('[AppLoggerService] File transport recreated (structural config change).');
+    } else {
+      // Only level or maxFiles changed — update in-place, no counter reset
+      this.logger.level = newConfig.logLevel;
+      this.logger.transports.forEach(t => { t.level = newConfig.logLevel; });
+      console.log('[AppLoggerService] Log level updated in-place (no transport restart).');
     }
   }
 

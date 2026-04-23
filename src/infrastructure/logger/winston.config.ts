@@ -13,6 +13,19 @@ export interface WinstonConfigPayload {
   logLevel: string;
   logMaxSize: string;
   logMaxFiles: string;
+  logZippedArchive: boolean;
+  logArchiveDirPattern: string;
+}
+
+/**
+ * Replaces YYYY, MM, DD tokens in a pattern string with the current date values.
+ */
+function formatDatePattern(pattern: string): string {
+  const now = new Date();
+  const yyyy = now.getFullYear().toString();
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+  return pattern.replace('YYYY', yyyy).replace('MM', mm).replace('DD', dd);
 }
 
 /**
@@ -68,20 +81,68 @@ export function createWinstonLogger(
   );
 
   // --- Daily Rotate File Transport ---
+  // Split extension so the size-rotation counter appears before it (e.g. van-front-2026-04-21.1.log)
+  const fileExt = path.extname(config.logFilePattern);                        // e.g. '.log'
+  const fileBasename = fileExt
+    ? config.logFilePattern.slice(0, -fileExt.length)   // strip extension
+    : config.logFilePattern;
+
+  // Use a fixed auditFile path (not hash-based) so state is consistent across reloads
+  const auditFile = path.join(resolvedLogDir, '.rotate-audit.json');
+
   const fileTransport = new DailyRotateFile({
     dirname: resolvedLogDir,
-    filename: config.logFilePattern,
+    filename: fileBasename,
+    extension: fileExt || undefined,
     datePattern: config.logDatePattern,
-    zippedArchive: false, // set to true to GZIP old files
+    zippedArchive: config.logZippedArchive,
     maxSize: config.logMaxSize,
     maxFiles: config.logMaxFiles,
+    auditFile,
     format: jsonFormat,
     level: config.logLevel,
+    options: { flags: 'a' },  // append to existing file instead of truncating on restart
   });
 
   fileTransport.on('rotate', (oldFilename: string, newFilename: string) => {
-    // Hook for post-rotation tasks (e.g., ship to S3, notify, etc.)
     console.log(`[Logger] Rotated: ${oldFilename} → ${newFilename}`);
+
+    if (!config.logArchiveDirPattern) return;
+
+    const moveToArchive = () => {
+      const archiveDir = path.resolve(
+        resolvedLogDir,
+        formatDatePattern(config.logArchiveDirPattern),
+      );
+      if (!fs.existsSync(archiveDir)) {
+        fs.mkdirSync(archiveDir, { recursive: true });
+      }
+
+      const gzFilename = oldFilename + '.gz';
+      let srcFile: string | null = null;
+      if (config.logZippedArchive && fs.existsSync(gzFilename)) {
+        srcFile = gzFilename;
+      } else if (fs.existsSync(oldFilename)) {
+        srcFile = oldFilename;
+      }
+
+      if (srcFile) {
+        const destFile = path.join(archiveDir, path.basename(srcFile));
+        try {
+          fs.renameSync(srcFile, destFile);
+          console.log(`[Logger] Archived: ${srcFile} → ${destFile}`);
+        } catch (err) {
+          console.error(`[Logger] Archive move failed: ${err}`);
+        }
+      }
+    };
+
+    // Wait briefly for winston-daily-rotate-file to finish writing the .gz file
+    if (config.logZippedArchive) {
+      setTimeout(moveToArchive, 2000);
+    } else {
+      moveToArchive();
+    }
   });
 
   // --- Console Transport (always on, useful during development) ---

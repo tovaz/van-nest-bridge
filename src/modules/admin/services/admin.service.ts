@@ -38,6 +38,8 @@ export class AdminService {
       logLevel: updatedEntity.logLevel,
       logMaxSize: updatedEntity.logMaxSize,
       logMaxFiles: updatedEntity.logMaxFiles,
+      logZippedArchive: updatedEntity.logZippedArchive,
+      logArchiveDirPattern: updatedEntity.logArchiveDirPattern,
     });
 
     return updatedEntity;

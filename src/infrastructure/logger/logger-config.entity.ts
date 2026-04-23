@@ -11,21 +11,27 @@ export class LoggerConfigEntity {
   @PrimaryColumn()
   id: number = 1;
 
-  @Column({ default: './logs' })
+  @Column({ default: 'C:\\VAN_RUN\\logsangular' })
   logDir: string;
 
-  @Column({ default: 'app-%DATE%.log' })
+  @Column({ default: 'van-front-%DATE%.log' })
   logFilePattern: string;
 
-  @Column({ default: 'YYYY-MM-DD' })
+  @Column({ default: 'MM-DD-YYYY' })
   logDatePattern: string;
 
   @Column({ default: 'info' })
   logLevel: string;
 
-  @Column({ default: '20m' })
+  @Column({ default: '10m' })
   logMaxSize: string;
 
   @Column({ default: '30d' })
   logMaxFiles: string;
+
+  @Column({ default: true })
+  logZippedArchive: boolean;
+
+  @Column({ default: 'YYYY-MM' })
+  logArchiveDirPattern: string;
 }
